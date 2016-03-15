@@ -22,5 +22,7 @@ extern uint8_t moveWaypointForwards(uint8_t waypoint, float distanceMeters);
 extern uint8_t increase_nav_heading(int32_t *heading, int32_t increment);
 extern uint8_t chooseRandomIncrementAvoidance(void);
 
+extern uint8_t change_waypoint_random_inside_obstacle(uint8_t waypoint);
+
 #endif
 

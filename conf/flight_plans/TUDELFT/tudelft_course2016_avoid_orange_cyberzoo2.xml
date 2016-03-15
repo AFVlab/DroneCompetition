@@ -38,9 +38,12 @@
   </sectors>
   <exceptions>
     <exception cond="!InsideCyberZoo(GetPosX(), GetPosY())" deroute="Standby"/>
-    <exception cond="datalink_time > 2" deroute="Land here"/>
+     <exception cond="datalink_time > 2" deroute="Land here"/> 
     <exception cond="electrical.bat_low && !(nav_block == IndexOfBlock('Land')) && !(nav_block == IndexOfBlock('Flare')) && !(nav_block == IndexOfBlock('Landed'))" deroute="Land"/>
     <exception cond="electrical.bat_critical && !(nav_block == IndexOfBlock('Land')) && !(nav_block == IndexOfBlock('Flare')) && !(nav_block == IndexOfBlock('Landed'))" deroute="Land here"/>
+
+
+
   </exceptions>
   <blocks>
     <block name="Wait GPS">
@@ -78,7 +81,7 @@
       <exception cond="!InsideObstacleZone(GetPosX(),GetPosY())" deroute="PrepareObstacleRun"/>
     </block>
     <block name="MoveGoalForward">
-      <call fun="moveWaypointForwards(WP_GOAL,0.5)"/>
+      <call fun="moveWaypointForwards(WP_GOAL,1.0)"/>
       <deroute block="StayGoal"/>
       <exception cond="!safeToGoForwards" deroute="ChangeHeading"/>
       <exception cond="!InsideObstacleZone(WaypointX(WP_GOAL),WaypointY(WP_GOAL))" deroute="PrepareObstacleRun"/>
@@ -87,19 +90,26 @@
       <call fun="NavSetWaypointHere(WP_STDBY)"/>
       <while cond="1">
         <call fun="increase_nav_heading(&nav_heading, incrementForAvoidance)"/>
-        <call fun="moveWaypointForwards(WP_GOAL,0.5)"/>
+        <call fun="moveWaypointForwards(WP_GOAL,1.0)"/>
         <go wp="STDBY"/>
       </while>
       <exception cond="safeToGoForwards" deroute="StayGoal"/>
     </block>
     <block name="PrepareObstacleRun">
       <call fun="NavSetWaypointHere(WP_STDBY)"/>
+<!-- enforce random heading -->
+
+      <!-- <call fun="change_waypoint_random_inside_obstacle(WP_HOME)" /> -->
+      
+
+<!-- -->
       <call fun="nav_set_heading_towards_waypoint(WP_HOME)"/>
+      <call fun="increase_nav_heading(&nav_heading, incrementForAvoidance)"/>
       <stay wp="STDBY"/>
       <exception cond="block_time > 1" deroute="GetOutOfObstacleZone"/>
     </block>
     <block name="GetOutOfObstacleZone">
-      <call fun="moveWaypointForwards(WP_GOAL,0.5)"/>
+      <call fun="moveWaypointForwards(WP_GOAL,1.0)"/>
       <call fun="chooseRandomIncrementAvoidance()"/>
       <stay wp="GOAL"/>
       <exception cond="block_time > 1" deroute="START"/>
