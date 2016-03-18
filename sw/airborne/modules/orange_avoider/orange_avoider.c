@@ -109,9 +109,15 @@ uint8_t moveWaypointForwards(uint8_t waypoint, float distanceMeters){
 
 uint8_t chooseRandomIncrementAvoidance(){
 
-	int r = rand() % 2;
+	int r = rand() % 4;
 	if(r==0){
-		incrementForAvoidance=1000; //was 350
+		incrementForAvoidance=1000;
+	}
+	else if(r==1){
+		incrementForAvoidance=2000;
+	}
+	else if(r==2){
+		incrementForAvoidance=-2000; //was 350
 	}
 	else{
 		incrementForAvoidance=-1000; // was -350
