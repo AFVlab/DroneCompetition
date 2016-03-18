@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
 
-<flight_plan alt="1.5" ground_alt="0" lat0="51.990634" lon0="4.376789" max_dist_from_home="8" name="Bebop avoid orange TU Delft Cyberzoo" security_height="0.4">
+<flight_plan alt="1.5" ground_alt="0" lat0="51.990634" lon0="4.376789" max_dist_from_home="8" name="Bebop avoid orange TU Delft Cyberzoo" security_height="2.5">
   <header>
 #include "autopilot.h"
 #include "subsystems/ahrs.h"
@@ -38,9 +38,10 @@
   </sectors>
   <exceptions>
     <exception cond="!InsideCyberZoo(GetPosX(), GetPosY())" deroute="Standby"/>
-     <exception cond="datalink_time > 2" deroute="Land here"/> 
-    <exception cond="electrical.bat_low && !(nav_block == IndexOfBlock('Land')) && !(nav_block == IndexOfBlock('Flare')) && !(nav_block == IndexOfBlock('Landed'))" deroute="Land"/>
+     <!--<exception cond="datalink_time > 2" deroute="Land here"/> -->
+    <exception cond="electrical.bat_low && !(nav_block == IndexOfBlock('Land')) && !(nav_block == IndexOfBlock('Flare')) && !(nav_block == IndexOfBlock('Landed'))" deroute="Land here"/>
     <exception cond="electrical.bat_critical && !(nav_block == IndexOfBlock('Land')) && !(nav_block == IndexOfBlock('Flare')) && !(nav_block == IndexOfBlock('Landed'))" deroute="Land here"/>
+    <exception cond="stopGoingHigher && !(nav_block == IndexOfBlock('Land')) && !(nav_block == IndexOfBlock('Flare')) && !(nav_block == IndexOfBlock('Landed'))" deroute="Land here"/>
 
 
 
@@ -97,12 +98,6 @@
     </block>
     <block name="PrepareObstacleRun">
       <call fun="NavSetWaypointHere(WP_STDBY)"/>
-<!-- enforce random heading -->
-
-      <!-- <call fun="change_waypoint_random_inside_obstacle(WP_HOME)" /> -->
-      
-
-<!-- -->
       <call fun="nav_set_heading_towards_waypoint(WP_HOME)"/>
       <call fun="increase_nav_heading(&nav_heading, incrementForAvoidance)"/>
       <stay wp="STDBY"/>
@@ -121,7 +116,7 @@
       <go wp="TD"/>
     </block>
     <block name="Flare">
-      <exception cond="NavDetectGround()" deroute="Holding point"/>
+      <exception cond="navDetectGround()" deroute="Holding point"/>
       <exception cond="!nav_is_in_flight()" deroute="Landed"/>
       <call fun="NavStartDetectGround()"/>
       <stay climb="nav_descend_vspeed" vmode="climb" wp="TD"/>

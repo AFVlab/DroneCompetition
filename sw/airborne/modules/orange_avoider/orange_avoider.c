@@ -20,6 +20,8 @@
 uint8_t safeToGoForwards=FALSE;
 int tresholdColorCount = 1000; //was 200
 int32_t incrementForAvoidance;
+uint8_t stopGoingHigher=FALSE;
+float maxHeight = 6;
 
 void orange_avoider_init() {
 	// Initialise the variables of the colorfilter to accept orange
@@ -37,6 +39,7 @@ void orange_avoider_periodic() {
 	// Check the amount of orange. If this is above a threshold
 	// you want to turn a certain amount of degrees
 	safeToGoForwards = color_count < tresholdColorCount;
+	checkHeight(maxHeight);
 	printf("Checking if this funciton is called %d treshold: %d now: %d \n", color_count, tresholdColorCount, safeToGoForwards);
 }
 
@@ -113,6 +116,28 @@ uint8_t chooseRandomIncrementAvoidance(){
 	else{
 		incrementForAvoidance=-1000; // was -350
 	}
+	return FALSE;
+}
+
+float checkHeight(float maxHeight){
+
+	  //struct UtmCoor_f *pos = stateGetPositionUtm_f(); // Get your current position
+	  struct EnuCoor_f *pos3 = stateGetPositionEnu_f(); //
+	  //struct EcefCoor_f *pos2 = stateGetPositionEcef_f();
+
+	  //float altitude = pos->alt;
+	  //float altitude2 = pos2->y;
+	  float altitude3 = pos3->z;
+
+	  	  printf("Checking what the z coordinate is %f maxHeight: %f \n", altitude3, maxHeight);
+	  	  if(altitude3 > maxHeight){
+	  	  		stopGoingHigher=TRUE;
+	  	  	  }
+	  	  	  else{
+	  	  	  	stopGoingHigher=FALSE;
+	  	            }
+
+	  	printf("Is maxheight?  %d \n", stopGoingHigher);
 	return FALSE;
 }
 
